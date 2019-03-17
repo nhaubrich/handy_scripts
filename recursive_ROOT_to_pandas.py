@@ -19,17 +19,18 @@ for n,sample in enumerate(glob.glob(sys.argv[1]+"*/")):
     head, tail = os.path.split(sample)
     samplename = head.split(os.sep)[-1]
     print(samplename)
-    
+
     dfs = []
-    for m,filename in tqdm(enumerate(glob.glob(sample+"*.root"))):
+    for filename in tqdm(glob.glob(sample+"*.root")):
         count+=1
-        if count>100:
+        if count>10000:
             print("stopping...")
             stop=True
             break
         head, tail = os.path.split(filename)
         #print(tail)
-        dfs.append(read_root(filename,"Events", columns=cols))
-
-    df = pd.concat(dfs)
-    df.to_hdf("pandas_files/"+samplename+".h5",key="Events")
+        try:
+            dfs.append(read_root(filename,"Events", columns=cols))
+        except:
+            print("This file seems empty, skipping: "+tail)
+            pass
