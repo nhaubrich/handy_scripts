@@ -6,8 +6,9 @@ fname = sys.argv[1]
 f = ROOT.TFile(fname,"UPDATE")
 
 def convertToTH1F(f,key):
-    obj = getattr(f,key)
     print(key)
+    #obj = getattr(f,key)
+    obj=f.Get(key)
     if isinstance(obj,ROOT.TDirectoryFile):
         #print("TD")
         #directory, so call recursively on each subsequent object
@@ -19,8 +20,8 @@ def convertToTH1F(f,key):
         h1F = ROOT.TH1F()
         obj.Copy(h1F)
         f.cd()
-        h1F.Write()
-        f.Delete(obj.GetName()+";1")
+        h1F.Write("",ROOT.TObject.kOverwrite)
+        #f.Delete(obj.GetName()+";1")
 
     
 
